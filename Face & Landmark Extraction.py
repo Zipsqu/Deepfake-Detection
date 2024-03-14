@@ -7,6 +7,11 @@ import tensorflow as tf
 # Set CUDA_VISIBLE_DEVICES to specify the GPU
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
+# Configure TensorFlow session
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=config)
+
 def extract_frames_and_detect_faces(video_path, output_folder, metadata):
     # Initialize MTCNN for face detection
     detector = MTCNN()
