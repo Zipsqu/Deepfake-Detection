@@ -1,13 +1,14 @@
-Honours Project: Developing & Testing a CNN based deepfake detection.
-Dataset: DFDC Sample dataset (400 videos)
+Honours Project: Developing & Testing a CNN based deepfake detection. <br /> <br />
+Dataset: DFDC Sample dataset (400 videos) <br />
+<br />
 
 
-1. Pre-processing:
-   -Cropped Faces & Landmark extraction (MTCNN)
-   -Adjusting frame size & Augumentation
-   -Splitting dataset into Trainig/Testing/Evaluation (70%/15%/15%)
+1. Pre-processing: <br />
+   -Cropped Faces & Landmark extraction (MTCNN) <br />
+   -Adjusting frame size & Augumentation <br />
+   -Splitting dataset into Trainig/Testing/Evaluation (70%/15%/15%) <br />
 
-2. CNN Detector
-   -EfficientNet Based (pre-trained) (B0 because of small dataset)
+2. CNN Detector <br />
+   -EfficientNet Based (pre-trained) (B0 because of small dataset) <br />
    
    -
