@@ -1,11 +1,13 @@
 import os
 import json
 import tensorflow as tf
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import albumentations as A
 from tensorflow.keras.applications import EfficientNetB0
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Set GPU memory growth to avoid memory allocation issues
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -24,34 +26,42 @@ val_dir = 'path/to/validation/data'
 img_size = (224, 224)
 batch_size = 32
 
-# Data augmentation for training dataset
-train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=20,
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
-    horizontal_flip=True
-)
+# Define data augmentation transforms using Albumentations
+train_augmentation = A.Compose([
+    A.Rotate(limit=20, p=0.5),
+    A.RandomResizedCrop(img_size[0], img_size[1], scale=(0.8, 1.0), p=0.5),
+    A.HorizontalFlip(p=0.5),
+    A.VerticalFlip(p=0.5),
+    A.RandomBrightnessContrast(p=0.2),
+    A.HueSaturationValue(p=0.2)
+])
 
 # No data augmentation for validation dataset
-val_datagen = ImageDataGenerator(rescale=1./255)
+val_augmentation = A.Compose([])
 
-# Load training and validation datasets
-train_generator = train_datagen.flow_from_directory(
-    train_dir,
-    target_size=img_size,
-    batch_size=batch_size,
-    class_mode='binary'
-)
+# Define data loading functions
+def load_image(file_path):
+    img = tf.io.read_file(file_path)
+    img = tf.image.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, img_size)
+    img = tf.cast(img, tf.float32) / 255.0
+    return img
 
-val_generator = val_datagen.flow_from_directory(
-    val_dir,
-    target_size=img_size,
-    batch_size=batch_size,
-    class_mode='binary'
-)
+def process_data(image, label):
+    return image, label
+
+# Load training and validation datasets using tf.data API
+train_dataset = tf.data.Dataset.list_files(os.path.join(train_dir, '*/*.jpg'))
+train_dataset = train_dataset.map(lambda x: (load_image(x), int(os.path.dirname(x).split('/')[-1])))
+train_dataset = train_dataset.map(lambda x, y: (train_augmentation(image=x)['image'], y))
+train_dataset = train_dataset.map(process_data)
+train_dataset = train_dataset.shuffle(buffer_size=1000).batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
+
+val_dataset = tf.data.Dataset.list_files(os.path.join(val_dir, '*/*.jpg'))
+val_dataset = val_dataset.map(lambda x: (load_image(x), int(os.path.dirname(x).split('/')[-1])))
+val_dataset = val_dataset.map(lambda x, y: (val_augmentation(image=x)['image'], y))
+val_dataset = val_dataset.map(process_data)
+val_dataset = val_dataset.batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 
 # Load EfficientNetB0 model with pre-trained weights
 base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
@@ -67,12 +77,8 @@ model.compile(optimizer=Adam(lr=0.0001), loss='binary_crossentropy', metrics=['a
 
 # Train the model
 history = model.fit(
-    train_generator,
-    steps_per_epoch=train_generator.samples // batch_size,
+    train_dataset,
     epochs=10,
-    validation_data=val_generator,
-    validation_steps=val_generator.samples // batch_size
+    validation_data=val_dataset,
+    callbacks=[ModelCheckpoint('efficientnetb0_model.h5', save_best_only=True, monitor='val_loss')]
 )
-
-# Save the trained model
-model.save('efficientnetb0_model.h5')
