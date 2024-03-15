@@ -8,7 +8,7 @@ python "XXX/Pre-Processing/Face & Landmark Extraction.py"
 #Re-sizing the images to 224x224 as required by EfficientNetB0
 python "XXX/Pre-Processing/Re-sizing.py"
 
-#Adjust the JSON metadata files to resizing.
+#Adjust the JSON metadata files to resizing & moving to same folder as images.
 python "XXX/Pre-Processing/Adjusting JSON.py"
 
 #Splitting dataset into training/validation/testing (80%,10%,10%), while making sure frames related to one video will stay in same folder.
