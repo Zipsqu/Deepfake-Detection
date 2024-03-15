@@ -3,12 +3,12 @@ import shutil
 import random
 
 # Define paths to the directory containing images and metadata JSON files
-source_dir = 'path/to/source_directory'  # Change this to the actual path
+source_dir = "D:/DFDC Sample Dataset/Resized Frames"  # Change this to the actual path
 
 # Define paths to the directories where the separated data sets will be stored
-train_dir = 'path/to/train'  # Change this to the actual path
-val_dir = 'path/to/val'  # Change this to the actual path
-test_dir = 'path/to/test'  # Change this to the actual path
+train_dir = "D:/DFDC Sample Dataset/Pre-processed Dataset/Training"  # Change this to the actual path
+val_dir = "D:/DFDC Sample Dataset/Pre-processed Dataset/Validation"  # Change this to the actual path
+test_dir = "D:/DFDC Sample Dataset/Pre-processed Dataset/Testing"  # Change this to the actual path
 
 # Define the split ratios for train, validation, and test sets (e.g., 80%, 10%, 10%)
 train_ratio = 0.8
@@ -51,7 +51,7 @@ def move_files(videos, source_dir, dest_dir):
         for image in video_images[video]:
             image_name, _ = os.path.splitext(image)
             image_path = os.path.join(source_dir, image)
-            metadata_file = image_name + '_metadata.json'
+            metadata_file = image_name.replace('_face', '_metadata') + '.json'
             metadata_path = os.path.join(source_dir, metadata_file)
             dst_image_path = os.path.join(dest_dir, image)
             dst_metadata_path = os.path.join(dest_dir, metadata_file)
