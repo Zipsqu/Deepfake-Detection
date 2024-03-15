@@ -31,6 +31,6 @@ def move_json_files(source_dir, destination_dir):
             shutil.move(json_path, destination_dir)
 
 # Example usage
-source_directory = "D:/DFDC Detector/Extracted Frames"
-destination_directory = "D:/DFDC Detector/Extracted Frames 2.0"
+source_directory = "D:/DFDC Sample Dataset/Extracted Frames"
+destination_directory = "D:/DFDC Sample Dataset/Resized Frames"
 move_json_files(source_directory, destination_directory)
