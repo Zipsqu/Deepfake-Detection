@@ -7,7 +7,7 @@
  <sub>#Use Pre-Processing.py</sub>
 1. Pre-processing: <br />
    -Cropped Faces & Landmark extraction (MTCNN) <br />
-   -Adjusting frame size (to 224x224 as required for EfficientNetB0)  <br />
+   -Adjusting frame size to 224x224 (native for EfficientNetB0)  <br />
    -Splitting dataset into Trainig/Testing/Evaluation (80%,10%,10%) <br /> 
 
 
