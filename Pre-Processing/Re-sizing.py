@@ -1,6 +1,7 @@
 import os
 import cv2
 import shutil
+import cupy as cp  # Import CuPy for GPU-accelerated resizing
 
 # Define the directory containing the images
 input_dir = 'path/to/input/images'
@@ -23,8 +24,17 @@ for filename in os.listdir(input_dir):
     image_path = os.path.join(input_dir, filename)
     image = cv2.imread(image_path)
 
-    # Resize the image to the target size
-    resized_image = cv2.resize(image, target_size)
+    # Convert the image to CuPy array for GPU processing
+    image_cp = cp.asarray(image)
+
+    # Resize the image to the target size using CuPy for GPU acceleration
+    resized_image_cp = cp.resize(image_cp, target_size)
+
+    # Convert the resized image back to NumPy array
+    resized_image_np = cp.asnumpy(resized_image_cp)
+
+    # Convert the resized image to OpenCV format
+    resized_image = resized_image_np.astype('uint8')
 
     # Save the resized image to the output directory
     output_path = os.path.join(output_dir, filename)
