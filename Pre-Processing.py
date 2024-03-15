@@ -13,6 +13,3 @@ python "XXX/Pre-Processing/Adjusting JSON.py"
 
 #Splitting dataset into training/validation/testing (80%,10%,10%), while making sure frames related to one video will stay in same folder.
 python "XXX/Pre-Processing/Dataset Split.py"
-
-#Previous split has a mistake in naming convention, so this file moves associated JSON files to the previously moved frames.
-python "XXX/Pre-PRocessing/Dataset Split FIX.py"
