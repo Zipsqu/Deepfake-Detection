@@ -5,7 +5,7 @@
 #Face & Landmark extraction, this code doesn't use GPU so it can take a fair amount of time (it's efficient on the CPU- this allows tasks in the background).
 python "XXX/Pre-Processing/Face & Landmark Extraction.py"
 
-#Re-sizing the images to 224x224 as required by EfficientNetB0
+#Re-sizing the images to 224x224 & moving to new folder.
 python "XXX/Pre-Processing/Re-sizing.py"
 
 #Adjust the JSON metadata files to resizing & moving to same folder as images.
