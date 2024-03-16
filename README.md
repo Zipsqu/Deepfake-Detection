@@ -13,7 +13,7 @@
 
 
 2. CNN Detector <br />
-   -Augumentation ( <br />
+   -Augumentation (Albumentations: XXX) <br />
    -EfficientNetB0 Based (smallest EfficientNet) <br />
-   
+   -Batch size:
    -
