@@ -21,7 +21,7 @@ def extract_frames_and_detect_faces(video_path, output_folder, metadata):
     frame_count = 0
 
     # Extract video name from the file path
-    video_name = os.path.splitext(os.path.basename(video_path))[0]
+    video_name = os.path.basename(video_path)
 
     # Get metadata for the current video
     video_metadata = metadata.get(video_name, {})
@@ -63,17 +63,24 @@ def extract_frames_and_detect_faces(video_path, output_folder, metadata):
     cv2.destroyAllWindows()
 
 
-# Load JSON metadata
-with open('D:/DFDC Sample Dataset/Train Videos/metadata.json', 'r') as f:
-    metadata = json.load(f)
+# Metadata file path
+metadata_file_path = 'D:/DFDC Sample Dataset/Videos/metadata.json'
 
-# Path to directory containing videos
-video_dir = 'D:/DFDC Sample Dataset/Train Videos'
+# Check if metadata file exists
+if os.path.exists(metadata_file_path):
+    # Load metadata from JSON file
+    with open(metadata_file_path, 'r') as f:
+        metadata = json.load(f)
 
-# Path to directory where extracted frames will be saved
-output_dir = 'D:/DFDC Detector/Extracted Frames'
+    # Path to directory containing videos
+    video_dir = 'D:/DFDC Sample Dataset/Videos'
 
-# Iterate over videos in the directory
-for video_file in os.listdir(video_dir):
-    video_path = os.path.join(video_dir, video_file)
-    extract_frames_and_detect_faces(video_path, output_dir, metadata)
+    # Path to directory where extracted frames will be saved
+    output_dir = 'D:/DFDC Sample Dataset/Extracted Frames'
+
+    # Iterate over videos in the directory
+    for video_file in os.listdir(video_dir):
+        video_path = os.path.join(video_dir, video_file)
+        extract_frames_and_detect_faces(video_path, output_dir, metadata)
+else:
+    print("Metadata file not found at:", metadata_file_path)
