@@ -12,6 +12,8 @@ num_classes = 2  # Binary classification (real or fake)
 batch_size = 32
 num_epochs = 10
 learning_rate = 0.001
+weight_decay = 1e-5  # Weight decay coefficient
+dropout_rate = 0.5  # Dropout probability
 
 # Create custom datasets and data loaders for training and validation
 train_dataset = CustomDataset(train_root_dir, transform=get_augmentations())
@@ -20,12 +22,13 @@ train_data_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=Tru
 val_dataset = CustomDataset(val_root_dir, transform=get_augmentations())
 val_data_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-# Define the EfficientNet model
+# Define the EfficientNet model with dropout
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=num_classes)
+model._dropout = nn.Dropout(p=dropout_rate)  # Add dropout to the last layer
 
-# Define loss function and optimizer
+# Define loss function and optimizer with weight decay
 criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
 # Training loop
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -33,7 +36,10 @@ model.to(device)
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0
-    for i, (images, labels) in enumerate(train_data_loader):
+    correct = 0
+    total = 0
+
+    for batch_idx, (images, labels) in enumerate(train_data_loader):
         images, labels = images.to(device), labels.to(device)
 
         optimizer.zero_grad()
@@ -44,13 +50,19 @@ for epoch in range(num_epochs):
 
         running_loss += loss.item() * images.size(0)
 
-        # Print batch progress
-        if (i + 1) % 10 == 0:  # Print every 10 batches
-            print(
-                f'Epoch [{epoch + 1}/{num_epochs}], Batch [{i + 1}/{len(train_data_loader)}], Loss: {loss.item():.4f}')
+        _, predicted = torch.max(outputs, 1)
+        correct += (predicted == labels).sum().item()
+        total += labels.size(0)
 
-    epoch_loss = running_loss / len(train_dataset)
-    print(f"Epoch [{epoch + 1}/{num_epochs}], Training Loss: {epoch_loss:.4f}")
+        # Print batch progress
+        print_freq = 10
+        if (batch_idx + 1) % print_freq == 0:
+            accuracy = 100 * correct / total
+            print(
+                f"Epoch [{epoch + 1}/{num_epochs}], Batch [{batch_idx + 1}/{len(train_data_loader)}], Loss: {running_loss / print_freq:.4f}, Accuracy: {accuracy:.2f}%")
+            running_loss = 0.0  # Reset running_loss for the next set of batches
+            correct = 0  # Reset correct for the next set of batches
+            total = 0  # Reset total for the next set of batches
 
     # Validation loop
     model.eval()
