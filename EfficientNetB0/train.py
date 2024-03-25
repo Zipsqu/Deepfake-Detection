@@ -14,6 +14,7 @@ num_epochs = 10
 learning_rate = 0.001
 weight_decay = 1e-5  # Weight decay coefficient
 dropout_rate = 0.5  # Dropout probability
+patience = 3  # Early stopping patience
 
 # Create custom datasets and data loaders for training and validation
 train_dataset = CustomDataset(train_root_dir, transform=get_augmentations())
@@ -33,6 +34,10 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=
 # Training loop
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
+
+best_val_loss = float('inf')  # Initialize best validation loss
+no_improvement_count = 0  # Initialize count for early stopping
+
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0
@@ -64,6 +69,17 @@ for epoch in range(num_epochs):
             correct = 0  # Reset correct for the next set of batches
             total = 0  # Reset total for the next set of batches
 
+    # Check for early stopping
+    if val_epoch_loss < best_val_loss:
+        best_val_loss = val_epoch_loss
+        no_improvement_count = 0
+        torch.save(model.state_dict(), 'D:/DFDC Sample Dataset/Weights.pth')  # Save the model
+    else:
+        no_improvement_count += 1
+        if no_improvement_count >= patience:
+            print(f"Validation loss hasn't improved for {patience} epochs. Early stopping...")
+            break
+
     # Validation loop
     model.eval()
     val_running_loss = 0.0
@@ -85,5 +101,7 @@ for epoch in range(num_epochs):
     print(
         f"Epoch [{epoch + 1}/{num_epochs}], Validation Loss: {val_epoch_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}")
 
+
+
 # Save trained model weights
-torch.save(model.state_dict(), 'D:/DFDC Sample Dataset/Weights')
+torch.save(model.state_dict(), 'D:/DFDC Sample Dataset/Weights.pth')
