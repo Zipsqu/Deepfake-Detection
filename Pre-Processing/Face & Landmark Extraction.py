@@ -2,20 +2,14 @@ import os
 import cv2
 from mtcnn import MTCNN
 import json
-import tensorflow as tf
+from multiprocessing import Process, freeze_support
 
-# Set CUDA_VISIBLE_DEVICES to specify the GPU
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-# Configure TensorFlow session
-config = tf.compat.v1.ConfigProto()
-config.gpu_options.allow_growth = True
-session = tf.compat.v1.Session(config=config)
+metadata_file_path = 'D:/Dataset/dfdc_train_part_0/metadata.json'
+video_dir = 'D:/Dataset/dfdc_train_part_0'
+output_dir = 'D:/Dataset/Processed Frames'
+detector = MTCNN()
 
 def extract_frames_and_detect_faces(video_path, output_folder, metadata):
-    # Initialize MTCNN for face detection
-    detector = MTCNN()
-
     # Open video file
     cap = cv2.VideoCapture(video_path)
     frame_count = 0
@@ -62,25 +56,33 @@ def extract_frames_and_detect_faces(video_path, output_folder, metadata):
     cap.release()
     cv2.destroyAllWindows()
 
+def process_video(video_path, output_folder, metadata):
+    # Wrapper function to call extract_frames_and_detect_faces
+    extract_frames_and_detect_faces(video_path, output_folder, metadata)
 
-# Metadata file path
-metadata_file_path = 'D:/DFDC Sample Dataset/Videos/metadata.json'
+if __name__ == '__main__':
+    # Call freeze_support() if needed
+    freeze_support()
 
-# Check if metadata file exists
-if os.path.exists(metadata_file_path):
-    # Load metadata from JSON file
-    with open(metadata_file_path, 'r') as f:
-        metadata = json.load(f)
+    # Check if metadata file exists
+    if os.path.exists(metadata_file_path):
+        # Load metadata from JSON file
+        with open(metadata_file_path, 'r') as f:
+            metadata = json.load(f)
 
-    # Path to directory containing videos
-    video_dir = 'D:/DFDC Sample Dataset/Videos'
+        # List to store processes
+        processes = []
 
-    # Path to directory where extracted frames will be saved
-    output_dir = 'D:/DFDC Sample Dataset/Extracted Frames'
+        # Iterate over videos in the directory
+        for video_file in os.listdir(video_dir):
+            video_path = os.path.join(video_dir, video_file)
+            p = Process(target=process_video, args=(video_path, output_dir, metadata))
+            p.start()
+            processes.append(p)
 
-    # Iterate over videos in the directory
-    for video_file in os.listdir(video_dir):
-        video_path = os.path.join(video_dir, video_file)
-        extract_frames_and_detect_faces(video_path, output_dir, metadata)
-else:
-    print("Metadata file not found at:", metadata_file_path)
+        # Wait for all processes to finish
+        for p in processes:
+            p.join()
+
+    else:
+        print("Metadata file not found at:", metadata_file_path)
