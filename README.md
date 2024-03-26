@@ -1,7 +1,7 @@
 **Honours Project:** *Developing & Testing a CNN based deepfake detection.* <br /> 
 **Hardware:** *NVIDIA GeForce GTX 1660 Ti, Intel Core i7-10750H @2.60Ghz, 32GB RAM* <br />
-**Dataset:** *DFDC Sample dataset (400 videos)* <br /> <br />
-
+**Training & Validation Dataset:** *DFDC Dataset Packages 00-02 (4,782 Videos; 424 Real; 4357 Fake)* <br /> 
+**Evaluation Dataset:** *DFDC Sample Dataset (400 videos; 77 Real; 323 Fake)* <br />
 
 
  <sub>#Use Pre-Processing.py</sub>
@@ -13,5 +13,5 @@
 
 
 2. CNN Detector: <br />
-- EfficientNetB0 with pre-trained wieghts (Imagenet) <br />
+- EfficientNetB0 with pre-trained weights (Imagenet) <br />
 *#Overfitting was the biggest problem due to the size of EfficientNetB0 and relatively small dataset (to fight this, I used heavier augmentation by torchvision transforms, weight decay, droput rates & early stop if validation loss hasn't improved for 3 consecutive epochs).*
