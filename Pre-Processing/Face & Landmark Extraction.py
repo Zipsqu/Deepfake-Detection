@@ -13,7 +13,7 @@ max_processes = cpu_count() * 2
 processes = []
 
 
-def extract_frames_and_detect_faces(video_path, output_folder, metadata):
+def extractor_detector(video_path, output_folder, metadata):
 
     cap = cv2.VideoCapture(video_path)
     frame_count = 0
@@ -52,7 +52,7 @@ def extract_frames_and_detect_faces(video_path, output_folder, metadata):
 
 def process_video(video_path, output_folder, metadata):
     
-    extract_frames_and_detect_faces(video_path, output_folder, metadata)
+   extractor_detector(video_path, output_folder, metadata)
 
 if __name__ == '__main__':
 
