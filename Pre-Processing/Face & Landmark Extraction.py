@@ -4,15 +4,17 @@ from mtcnn import MTCNN
 import json
 from multiprocessing import Process, cpu_count
 
-detector = MTCNN()
-
+# Dataset location, output directory, path to original JSON file.
 video_dir = 'D:/Dataset/dfdc_train_part_0'
 output_dir = 'D:/Dataset/Processed Frames'
+metadata_file_path = 'D:/Dataset/dfdc_train_part_0/metadata.json'
 
+# Double the processes in relation to the available logical processors.
 max_processes = cpu_count() * 2
 processes = []
+detector = MTCNN()
 
-
+# Opening a video -> Detecting face & Landmarks per frame-> Saving it & related metadata
 def extractor_detector(video_path, output_folder, metadata):
 
     cap = cv2.VideoCapture(video_path)
@@ -50,13 +52,14 @@ def extractor_detector(video_path, output_folder, metadata):
 
     cap.release()
 
+
+# Wrapper for previous extractor & fixing performance que.
 def process_video(video_path, output_folder, metadata):
     
    extractor_detector(video_path, output_folder, metadata)
 
 if __name__ == '__main__':
 
-    metadata_file_path = 'D:/Dataset/dfdc_train_part_0/metadata.json'
     if os.path.exists(metadata_file_path):
 
         with open(metadata_file_path, 'r') as f:
