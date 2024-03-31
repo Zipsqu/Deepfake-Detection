@@ -25,7 +25,7 @@ val_data_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 # Define the EfficientNet model with dropout
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=num_classes)
-model._dropout = nn.Dropout(p=dropout_rate)  # Add dropout to the last layer
+model._dropout = nn.Dropout(p=dropout_rate)  
 
 # Define loss function and optimizer with weight decay
 criterion = nn.CrossEntropyLoss()
