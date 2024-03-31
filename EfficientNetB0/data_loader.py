@@ -5,6 +5,8 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
 
+train_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Training'
+val_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Validation'
 
 class CustomDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -24,13 +26,13 @@ class CustomDataset(Dataset):
 
     def __len__(self):
         return len(self.samples)
-
+# 
     def __getitem__(self, idx):
         image_path, json_path = self.samples[idx]
         image = Image.open(image_path).convert('RGB')
         with open(json_path) as f:
             data = json.load(f)
-        # Convert label to binary (assuming 'label' is present in JSON)
+# Converting label to binary
         label = 1 if data['label'] == 'fake' else 0
 
         if self.transform:
@@ -38,8 +40,8 @@ class CustomDataset(Dataset):
         return image, label
 
 
-# Define Albumentations augmentations
-# Define Albumentations augmentations
+
+# Transforms Augmentations
 def get_augmentations():
     return transforms.Compose([
         transforms.Resize((224, 224)),
@@ -51,15 +53,12 @@ def get_augmentations():
 
     ], p=1) ])
 
-
 if __name__ == "__main__":
-    train_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Training'
+    
     train_dataset = CustomDataset(train_root_dir, transform=get_augmentations())
-
-    val_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Validation'
     val_dataset = CustomDataset(val_root_dir, transform=get_augmentations())
 
-    # Example usage
+    # Output for training model.
     for image, label in train_dataset:
         print(image.shape, label)
 
