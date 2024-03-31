@@ -5,9 +5,12 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
 
+# Training & Validation Datasets 
 train_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Training'
 val_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Validation'
 
+
+# Getting images & associating their JSON metadata
 class CustomDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -32,6 +35,7 @@ class CustomDataset(Dataset):
         image = Image.open(image_path).convert('RGB')
         with open(json_path) as f:
             data = json.load(f)
+            
 # Converting label to binary
         label = 1 if data['label'] == 'fake' else 0
 
@@ -41,7 +45,7 @@ class CustomDataset(Dataset):
 
 
 
-# Transforms Augmentations
+# Augmentation, Resizing, Normalizing & converting to tensor 
 def get_augmentations():
     return transforms.Compose([
         transforms.Resize((224, 224)),
