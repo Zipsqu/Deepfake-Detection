@@ -6,8 +6,8 @@ from torchvision import transforms
 from PIL import Image
 
 # Training & Validation Datasets 
-train_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Training'
-val_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Validation'
+train_root_dir = 'D:/Dataset/Training'
+val_root_dir = 'D:/Dataset/Validation'
 
 
 # Getting images & associating their JSON metadata
