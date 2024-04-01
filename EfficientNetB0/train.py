@@ -25,7 +25,7 @@ val_data_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 # Define the EfficientNet model with dropout
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=num_classes)
-model._dropout = nn.Dropout(p=dropout_rate)  
+model._dropout = nn.Dropout(p=dropout_rate)
 
 # Define loss function and optimizer with weight decay
 criterion = nn.CrossEntropyLoss()
@@ -65,20 +65,10 @@ for epoch in range(num_epochs):
             accuracy = 100 * correct / total
             print(
                 f"Epoch [{epoch + 1}/{num_epochs}], Batch [{batch_idx + 1}/{len(train_data_loader)}], Loss: {running_loss / print_freq:.4f}, Accuracy: {accuracy:.2f}%")
-            running_loss = 0.0  
-            correct = 0 
-            total = 0 
+            running_loss = 0.0
+            correct = 0
+            total = 0
 
-    # Check for early stopping
-    if val_epoch_loss < best_val_loss:
-        best_val_loss = val_epoch_loss
-        no_improvement_count = 0
-        torch.save(model.state_dict(), 'D:/Dataset/Weights.pth')  # Save the model
-    else:
-        no_improvement_count += 1
-        if no_improvement_count >= patience:
-            print(f"Validation loss hasn't improved for {patience} epochs. Early stopping...")
-            break
 
     # Validation loop
     model.eval()
@@ -101,7 +91,16 @@ for epoch in range(num_epochs):
     print(
         f"Epoch [{epoch + 1}/{num_epochs}], Validation Loss: {val_epoch_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}")
 
-
+    # Check for early stopping
+    if val_epoch_loss < best_val_loss:
+        best_val_loss = val_epoch_loss
+        no_improvement_count = 0
+        torch.save(model.state_dict(), 'D:/Dataset/Weights.pth')  # Save the model
+    else:
+        no_improvement_count += 1
+        if no_improvement_count >= patience:
+            print(f"Validation loss hasn't improved for {patience} epochs. Early stopping...")
+            break
 
 # Save trained model weights
 torch.save(model.state_dict(), 'D:/DFDC Sample Dataset/Weights.pth')
