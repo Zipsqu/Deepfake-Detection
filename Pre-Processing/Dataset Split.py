@@ -49,7 +49,7 @@ def move_files(videos, source_dir, dest_dir):
         for image in video_images[video]:
             image_name, _ = os.path.splitext(image)
             image_path = os.path.join(source_dir, image)
-            metadata_file = image_name.replace('_face', '_metadata') + '.json'
+            metadata_file = image_name.replace('_face.jpg', '_metadata.json')
             metadata_path = os.path.join(source_dir, metadata_file)
             dst_image_path = os.path.join(dest_dir, image)
             dst_metadata_path = os.path.join(dest_dir, metadata_file)
