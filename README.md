@@ -16,3 +16,10 @@
 - EfficientNetB0 with pre-trained weights (Imagenet): <br />
 -Overfitting was the biggest problem due to the size of EfficientNetB0 and relatively small dataset (to fight this, I used heavier augmentation by torchvision transforms, weight decay, droput rates & early stop if validation loss hasn't improved for 3 consecutive epochs). <br />
 -Extraced frames are resized, normalized, converted to RGB and fed to the training model using tesnsors.
+
+
+ <sub>#Check RNN directory</sub>  
+
+3. GANs Detector:
+- 
+   
