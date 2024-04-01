@@ -6,8 +6,8 @@ from efficientnet_pytorch import EfficientNet
 from data_loader import CustomDataset, get_augmentations
 
 # Define DataLoader and model parameters
-train_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Training'
-val_root_dir = 'D:/DFDC Sample Dataset/Pre-processed Dataset/Validation'
+train_root_dir = 'D:/Dataset/Training'
+val_root_dir = 'D:/Dataset/Validation'
 num_classes = 2  # Binary classification (real or fake)
 batch_size = 32
 num_epochs = 10
@@ -65,15 +65,15 @@ for epoch in range(num_epochs):
             accuracy = 100 * correct / total
             print(
                 f"Epoch [{epoch + 1}/{num_epochs}], Batch [{batch_idx + 1}/{len(train_data_loader)}], Loss: {running_loss / print_freq:.4f}, Accuracy: {accuracy:.2f}%")
-            running_loss = 0.0  # Reset running_loss for the next set of batches
-            correct = 0  # Reset correct for the next set of batches
-            total = 0  # Reset total for the next set of batches
+            running_loss = 0.0  
+            correct = 0 
+            total = 0 
 
     # Check for early stopping
     if val_epoch_loss < best_val_loss:
         best_val_loss = val_epoch_loss
         no_improvement_count = 0
-        torch.save(model.state_dict(), 'D:/DFDC Sample Dataset/Weights.pth')  # Save the model
+        torch.save(model.state_dict(), 'D:/Dataset/Weights.pth')  # Save the model
     else:
         no_improvement_count += 1
         if no_improvement_count >= patience:
