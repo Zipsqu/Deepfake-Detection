@@ -4,7 +4,7 @@
 **Pre-processed dataset:** *Roughly 1,300,000 etracted frames split into training/testing/evaluation.* <br />
 
 
- <sub>#Check Pre-Processing.py </sub> 
+ <sub>#Check Pre-Processing.py </sub>  <br />
  <sub>#Adjust variables in pre-processing directory if necessary. </sub> 
 1. Pre-processing: <br /> 
    -Cropped Faces & Landmark extraction (MTCNN) <br />
@@ -15,13 +15,12 @@
  <sub>#Train.py is used for training the model & makes uses of the first data loader. Adjust variables in both if willing to run it on your own dataset. </sub>  
  <sub>#Testing.py is used for evaluation of the model using previously created weights (again, adjust variables). This code make a use of the data_loader2.py, which is nearly the exact same version of previous data_loader. </sub>  
  
-2. CNN Detector:
-- EfficientNetB0 with pre-trained weights (Imagenet): <br />
+2. EfficientNetB0 with pre-trained weights (Imagenet):
 -Overfitting was the biggest problem due to the size of EfficientNetB0 and relatively small dataset (to fight this, I used heavier augmentation by torchvision transforms, weight decay, droput rates & early stop if validation loss hasn't improved for 3 consecutive epochs). <br />
 -Extraced frames are resized, normalized, converted to RGB and fed to the training model using tesnsors.
+-During evaluation, the model thre the respective accuracy of 85% (worth taking into note that this number might vary when training/evaluating on different datasets). With that being said, model definietly had troubles classyfing REAL frames (only 6% of REAL frames are corretcly classified).
 
-
- <sub>#Check RNN directory</sub>  
+ <sub>#Check GANs directory</sub>  
 
 3. GANs Detector:
 - 
