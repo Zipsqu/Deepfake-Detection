@@ -17,7 +17,7 @@
  
 2. EfficientNetB0 with pre-trained weights (Imagenet): <br />
 -Overfitting was the biggest problem due to the size of EfficientNetB0 and relatively small dataset (to fight this, I used heavier augmentation by torchvision transforms, weight decay, droput rates & early stop if validation loss hasn't improved for 3 consecutive epochs). <br />
--Extraced frames are resized, normalized, converted to RGB and fed to the training model using tesnsors.
+-Extraced frames are resized, normalized, converted to RGB and fed to the training model using tesnsors. <br />
 -During evaluation, the model thre the respective accuracy of 85% (worth taking into note that this number might vary when training/evaluating on different datasets). With that being said, model definietly had troubles classyfing REAL frames (only 6% of REAL frames are corretcly classified).
 
  <sub>#Check GANs directory</sub>  
