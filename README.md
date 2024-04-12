@@ -5,12 +5,15 @@
 
 
  <sub>#Check Pre-Processing.py </sub> 
+ <sub>#Adjust variables in pre-processing directory if necessary. </sub> 
 1. Pre-processing: <br /> 
    -Cropped Faces & Landmark extraction (MTCNN) <br />
    -Splitting dataset into Trainig/Testing/Evaluation (80%,10%,10%) <br /> 
 
 
  <sub>#Check EfficientNetb0 directory</sub>  
+ <sub>#Train.py is used for training the model & makes uses of the first data loader. Adjust variables in both if willing to run it on your own dataset. </sub>  
+ <sub>#Testing.py is used for evaluation of the model using previously created weights (again, adjust variables). This code make a use of the data_loader2.py, which is nearly the exact same version of previous data_loader. </sub>  
  
 2. CNN Detector:
 - EfficientNetB0 with pre-trained weights (Imagenet): <br />
