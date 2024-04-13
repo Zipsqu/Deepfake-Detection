@@ -5,7 +5,12 @@ import json
 import numpy as np
 from PIL import Image
 
-def load_data(data_dirs):
+def load_data(train_dirs, val_dir):
+    x_train, y_train = load_data_from_directory(train_dirs)
+    x_val, y_val = load_data_from_directory([val_dir])
+    return (x_train, y_train), (x_val, y_val)
+
+def load_data_from_directory(data_dirs):
     images = []
     labels = []
     for data_dir in data_dirs:
@@ -27,13 +32,11 @@ def preprocess_images(images):
     return (images.astype(np.float32) - 127.5) / 127.5
 
 def preprocess_data(train_dirs, val_dir):
-    # Load training data
-    x_train, y_train = load_data(train_dirs)
-    x_train = preprocess_images(x_train)
+    # Load training and validation data
+    (x_train, y_train), (x_val, y_val) = load_data(train_dirs, val_dir)
     
-    # Load validation data
-    x_val, y_val = load_data(val_dir)
+    # Preprocess images
+    x_train = preprocess_images(x_train)
     x_val = preprocess_images(x_val)
     
     return (x_train, y_train), (x_val, y_val)
-
