@@ -20,8 +20,14 @@
 -Extraced frames are resized, normalized, converted to RGB and fed to the training model using tesnsors. <br />
 -During evaluation, the model thre the respective accuracy of 85% (worth taking into note that this number might vary when training/evaluating on different datasets). With that being said, model definietly had troubles classyfing REAL frames (only 6% of REAL frames are corretcly classified).
 
- <sub>#Check GANs directory</sub>  
+ <sub>#Check GANs directory.</sub>  
+ <sub>#Even though only discrimnator is trained using train.py, generator was created too for future research purposes.</sub>  
 
-3. GANs Detector:
-- 
-   
+3. GANs Detector: <br /> 
+-Same parameters (previously used in CNN model) are applied here, mostly because they are proved to work on this specific dataset, and are not to heavy on computational resources.  <br />
+-Only difference is the applied image size (64x64) and the fact that discrimnator architecture is manually specified (rather than assumed from EfficientNetB0). <br />
+-Evaluation.....................
+<br /><br />
+
+
+   ///Whenever my honours project gets graded, I'll submit the link to it here as a academic reference to this code.
