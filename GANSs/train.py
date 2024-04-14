@@ -1,59 +1,48 @@
-# train.py
-
 import numpy as np
+from data_loader import DataLoader
+from discriminator import build_discriminator
 import tensorflow as tf
-from model import build_generator, build_discriminator
-from data_preprocessing import preprocess_data
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
 
 # Parameters
-input_shape = (64, 64, 3)
-latent_dim = 100
-epochs = 100
-batch_size = 64
-model_save_path = 'D:/Dataset/model.h5'  # Specify the path to save the model
-train_dirs = ['D:/Dataset/Training']
-val_dir = 'D:/Dataset/Validation'
+train_data_dir = 'D:/Dataset/Training'
+val_data_dir = 'D:/Dataset/Validation'
+img_size = (64, 64)
+batch_size = 32
+epochs = 10
+patience = 3  # Number of epochs with no improvement after which training will be stopped
+discriminator_save_path = 'D:/Dataset/discriminator_model.h5'
 
-# Build and compile the discriminator
-discriminator = build_discriminator(input_shape)
-discriminator.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+print("Creating data loaders...")
+# Create data loaders
+train_data_loader = DataLoader(train_data_dir, img_size, batch_size)
+val_data_loader = DataLoader(val_data_dir, img_size, batch_size)
 
-# Build the generator
-generator = build_generator((latent_dim,))
-fake_image = generator(tf.keras.Input(shape=(latent_dim,)))
+print("Building and compiling discriminator...")
+# Build and compile discriminator
+discriminator = build_discriminator(input_shape=img_size + (3,))
+discriminator.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=0.0002, beta_1=0.5), metrics=['accuracy'])
 
-# The combined model (stacked generator and discriminator)
-discriminator.trainable = False
-validity = discriminator(fake_image)
-combined = tf.keras.Model(generator.input, validity)
-combined.compile(loss='binary_crossentropy', optimizer='adam')
+# Enable GPU usage with CUDA
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-# Preprocess data
-(x_train, y_train), (x_val, y_val) = preprocess_data(train_dirs, val_dir)
+# Define early stopping callback
+early_stopping = EarlyStopping(monitor='val_accuracy', patience=patience, verbose=1, restore_best_weights=True)
 
-# Training loop
-for epoch in range(epochs):
-    # Shuffle training data
-    indices = np.random.permutation(len(x_train))
-    x_train_shuffled = x_train[indices]
-    y_train_shuffled = y_train[indices]
-    
-    # Mini-batch training
-    for i in range(0, len(x_train), batch_size):
-        batch_images = x_train_shuffled[i:i+batch_size]
-        batch_labels = y_train_shuffled[i:i+batch_size]
-        
-        # Train discriminator
-        d_loss = discriminator.train_on_batch(batch_images, batch_labels)
-        
-        # Train generator (combined model)
-        noise = np.random.normal(0, 1, (batch_size, latent_dim))
-        valid_labels = np.ones(batch_size)
-        g_loss = combined.train_on_batch(noise, valid_labels)
-    
-    # Evaluate on validation data
-    val_loss, val_accuracy = discriminator.evaluate(x_val, y_val, verbose=0)
-    print(f"Epoch {epoch+1}/{epochs}, Discriminator Validation Loss: {val_loss}, Discriminator Validation Accuracy: {val_accuracy}")
+print("Training discriminator...")
+# Train discriminator with early stopping
+discriminator.fit(train_data_loader.load_data(),
+                   validation_data=val_data_loader.load_data(),
+                   batch_size=batch_size,
+                   epochs=epochs,
+                   callbacks=[early_stopping],
+                   verbose=1)
 
-# Save the trained discriminator model
-discriminator.save(model_save_path)
+# Save trained discriminator model
+print("Saving trained discriminator model...")
+discriminator.save(discriminator_save_path)
+
+print("Training complete.")
