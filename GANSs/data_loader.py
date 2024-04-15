@@ -9,21 +9,31 @@ class DataLoader:
         self.img_size = img_size
         self.batch_size = batch_size
 
+        self.files = [file for file in os.listdir(self.data_dir) if file.endswith('_metadata.json')]
+        self.num_files = len(self.files)
+        self.samples_per_epoch = self.num_files * 10  # Assuming 10 frames per metadata file
+        self.total_samples = self.num_files * 10  # Assuming 10 frames per metadata file
+        self.current_index = 0
+
     def load_data(self):
+        samples_processed = 0  # Counter to track the number of samples processed
+
         while True:
+            if self.current_index >= self.total_samples:
+                self.current_index = 0  # Reset index if end of dataset is reached
+                np.random.shuffle(self.files)  # Shuffle dataset between epochs
+
             X, y = [], []
 
-            # List all files in the data directory
-            files = [file for file in os.listdir(self.data_dir) if file.endswith('_metadata.json')]
+            for _ in range(self.batch_size):
+                if self.current_index >= self.total_samples:
+                    break  # Stop iteration if end of dataset is reached
 
-            # Shuffle the list of files
-            np.random.shuffle(files)
+                file = self.files[self.current_index // 10]  # Index to metadata file
 
-            for file in files:
                 with open(os.path.join(self.data_dir, file), 'r') as f:
                     metadata = json.load(f)
                     label = metadata['label']  # 'REAL' or 'FAKE'
-
 
                     frame_filename = file.replace('_metadata.json', '_face.jpg')
 
@@ -33,12 +43,13 @@ class DataLoader:
                     binary_label = 1 if label == 'REAL' else 0
                     y.append(binary_label)  # Convert labels to binary (REAL=1, FAKE=0)
 
+                self.current_index += 1
+                samples_processed += 1  # Increment samples_processed counter
 
-                    # Yield batch if it reaches batch size
-                    if len(X) == self.batch_size:
-                        yield np.array(X), np.array(y)
-                        X, y = [], []
+                # Print feedback during training
+                print(f"Processed {samples_processed} out of {self.total_samples} samples.")
 
-            # Yield the remaining data as the last batch
-            if X:
-                yield np.array(X), np.array(y)
+            if not X:
+                break  # Stop iteration if no more samples are available
+
+            yield np.array(X), np.array(y)
