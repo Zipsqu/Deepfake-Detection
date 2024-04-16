@@ -26,8 +26,13 @@
 3. GANs Detector: <br /> 
 -Same parameters (previously used in CNN model) are applied here, mostly because they are proved to work on this specific dataset, and are not to heavy on computational resources.  <br />
 -Only difference is the applied image size (64x64) and the fact that discrimnator architecture is manually specified (rather than assumed from EfficientNetB0). <br />
--Evaluation.....................
+-Model failed on evaluation & had troubles with training (passing over the first epoch). Modyficiation to the code & training on larger dataset is necessary (since there are no pre-trained weights for discriminator).<br />
 <br /><br />
+
+4. ResNet with pre-trained weights (Imagenet): <br />
+-Simple, pre-trained model, essentially used in a same manner as EfficientNet.
+
+   
 
 
    ///Whenever my honours project gets graded, I will submit the link as a further documentation to this code.
