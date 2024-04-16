@@ -27,7 +27,6 @@
 -Same parameters (previously used in CNN model) are applied here, mostly because they are proved to work on this specific dataset, and are not to heavy on computational resources.  <br />
 -Only difference is the applied image size (64x64) and the fact that discrimnator architecture is manually specified (rather than assumed from EfficientNetB0). <br />
 -Model failed on evaluation & had troubles with training (passing over the first epoch). Modyficiation to the code & training on larger dataset is necessary (since there are no pre-trained weights for discriminator).<br />
-<br /><br />
 
  <sub>#Check Resnet directory.</sub>  
  
