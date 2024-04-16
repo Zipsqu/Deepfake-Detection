@@ -30,7 +30,8 @@
 <br /><br />
 
 4. ResNet with pre-trained weights (Imagenet): <br />
--Simple, pre-trained model, essentially used in a same manner as EfficientNet.
+-Simple, pre-trained model, essentially used in a same manner as EfficientNet. Only used for a sake of evaluation.
+-
 
    
 
