@@ -29,11 +29,10 @@
 -Model failed on evaluation & had troubles with training (passing over the first epoch). Modyficiation to the code & training on larger dataset is necessary (since there are no pre-trained weights for discriminator).<br />
 <br /><br />
 
+ <sub>#Check Resnet directory.</sub>  
+ 
 4. ResNet with pre-trained weights (Imagenet): <br />
--Simple, pre-trained model, essentially used in a same manner as EfficientNet. Only used for a sake of evaluation.
--
-
-   
+-Simple, pre-trained model, essentially used in a same manner as EfficientNet. Only used for a sake of evaluation.   
 
 
    ///Whenever my honours project gets graded, I will submit the link as a further documentation to this code.
