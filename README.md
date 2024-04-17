@@ -32,6 +32,6 @@
  
 4. ResNet with pre-trained weights (Imagenet): <br />
 -Simple, pre-trained model, essentially used in a same manner as EfficientNet. Only used for a sake of evaluation.   
--Model achieved slighlty worse results than EfficientNet model (it did perform slighlty better on classyfing real frames)
+-Model achieved slighlty worse results than EfficientNet model.
 
    ///Whenever my honours project gets graded, I will submit the link as a further documentation to this code.///
