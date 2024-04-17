@@ -5,11 +5,6 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from PIL import Image
 
-# Training & Validation Datasets 
-train_root_dir = 'D:/Dataset/Training'
-val_root_dir = 'D:/Dataset/Validation'
-
-
 # Getting images & associating their JSON metadata
 class CustomDataset(Dataset):
     def __init__(self, root_dir, transform=None):
