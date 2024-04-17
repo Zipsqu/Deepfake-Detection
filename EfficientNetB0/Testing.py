@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 from efficientnet_pytorch import EfficientNet
-from data_loader import CustomDataset, get_augmentations
+from data_loader2 import CustomDataset, get_augmentations
 from sklearn.metrics import classification_report
 
 # Define evaluation dataset parameters
