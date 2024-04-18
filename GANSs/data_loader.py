@@ -11,8 +11,8 @@ class DataLoader:
 
         self.files = [file for file in os.listdir(self.data_dir) if file.endswith('_metadata.json')]
         self.num_files = len(self.files)
-        self.samples_per_epoch = self.num_files * 10  # Assuming 10 frames per metadata file
-        self.total_samples = self.num_files * 10  # Assuming 10 frames per metadata file
+        self.samples_per_epoch = self.num_files * 10 
+        self.total_samples = self.num_files * 10  
         self.current_index = 0
 
     def load_data(self):
