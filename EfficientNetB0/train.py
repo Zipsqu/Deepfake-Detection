@@ -95,7 +95,7 @@ for epoch in range(num_epochs):
     if val_epoch_loss < best_val_loss:
         best_val_loss = val_epoch_loss
         no_improvement_count = 0
-        torch.save(model.state_dict(), 'D:/Dataset/Weights.pth')  # Save the model
+        torch.save(model.state_dict(), 'D:/Dataset/Weights.pt')  # Save the model
     else:
         no_improvement_count += 1
         if no_improvement_count >= patience:
