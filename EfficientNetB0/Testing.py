@@ -17,7 +17,7 @@ eval_data_loader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=False
 model = EfficientNet.from_pretrained('efficientnet-b0', num_classes=num_classes)
 
 # Load the trained weights
-model.load_state_dict(torch.load('weights.pth'))
+model.load_state_dict(torch.load('D:/Dataset/weights.pt'))
 
 # Set the model to evaluation mode
 model.eval()
